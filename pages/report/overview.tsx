@@ -1,7 +1,14 @@
-import { Table, Image, Form, TextArea, Button } from "semantic-ui-react";
+import {
+  Table,
+  Image,
+  Form,
+  TextArea,
+  Button,
+  ItemMeta,
+} from "semantic-ui-react";
 import LocationDropDown from "../../components/LocationDropDown";
 import { useState } from "react";
-import { IReport } from "../api/reportDetail";
+import { IReport, getReportDetail } from "../api/reports/[id]";
 
 function ReportRow(props: {
   image: string;
@@ -44,22 +51,8 @@ function ReportRow(props: {
   );
 }
 
-export default function ReportOverview() {
-  const [items, setItems] = useState<IReport>({
-    reportElements: [
-      {
-        description: "the hills are alive",
-        location: "3",
-        image: "https://baconmockup.com/1024/768/",
-        id: "1",
-      },
-      {
-        description: "with the sound of music",
-        image: "https://baconmockup.com/1024/768/",
-        id: "2",
-      },
-    ],
-  });
+export default function ReportOverview({ report, host }) {
+  const [items, setItems] = useState<IReport>(report);
   return (
     <>
       <Table basic="very" celled>
@@ -87,9 +80,23 @@ export default function ReportOverview() {
           ))}
         </Table.Body>
       </Table>
-      <Button type="submit" onClick={() => console.log(items)}>
-        Submit
+      <Button
+        type="submit"
+        onClick={() => {
+          var url = `${location.protocol}//${location.host}/api/reports/1`;
+          fetch(url, {
+            method: "PUT",
+            cache: "no-cache",
+            body: JSON.stringify(items),
+          });
+        }}
+      >
+        Save
       </Button>
     </>
   );
+}
+
+export async function getServerSideProps(res) {
+  return { props: { report: getReportDetail("1") } };
 }
