@@ -13,13 +13,16 @@ export interface IReport {
   reportElements: IReportElement[];
 }
 
-const client = new MongoClient("mongodb://localhost:27017/test-dev", {
+const client = new MongoClient(process.env.MONGO_CONNECTIONSTRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 async function connect() {
-  if (!client.isConnected()) await client.connect();
+  if (!client.isConnected()) {
+    await client.connect();
+    console.log("Connected to database");
+  }
 }
 
 export async function saveReport(report: IReport) {

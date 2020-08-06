@@ -85,7 +85,7 @@ export default function ReportOverview(props: { report: IReport }) {
       });
       newElements = [
         {
-          id: (items.length + 1).toString(),
+          id: (newElements.length + 1).toString(),
           image: (await uploadResult.json()).path,
         },
         ...newElements,
@@ -100,11 +100,23 @@ export default function ReportOverview(props: { report: IReport }) {
         <Grid.Column>
           <Form>
             <FormGroup inline={true}>
-              <Form.Input
-                type="file"
-                label="Add photo"
-                onChange={(e) => uploadFile(e)}
-              />
+              <Label as="label" basic htmlFor="upload">
+                <Button
+                  icon="upload"
+                  label={{
+                    basic: true,
+                    content: "Select file(s)",
+                  }}
+                  labelPosition="right"
+                />
+                <input
+                  hidden
+                  id="upload"
+                  multiple
+                  type="file"
+                  onChange={(e) => uploadFile(e)}
+                />
+              </Label>
               <Label size="large">
                 <Icon name="calendar alternate outline" size="large" />
                 {new Date(props.report.date).toDateString()}

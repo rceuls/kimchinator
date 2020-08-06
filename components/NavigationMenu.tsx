@@ -1,22 +1,11 @@
 import { Menu, Icon, Button, Label } from "semantic-ui-react";
 import Link from "next/link";
-import { signin, signout, useSession } from "next-auth/client";
+import { signout, useSession } from "next-auth/client";
 
 export default function NavigationMenu() {
   const [session, loading] = useSession();
   return (
     <>
-      {!session && (
-        <a
-          href="/api/auth/signin"
-          onClick={(e) => {
-            e.preventDefault();
-            signin();
-          }}
-        >
-          <button className="signInButton">Sign in</button>
-        </a>
-      )}
       {session && (
         <Menu>
           <Menu.Item>
