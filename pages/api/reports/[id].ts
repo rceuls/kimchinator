@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { updateReport } from "../../../services/database";
 
 export default async function reportDetail(
   req: NextApiRequest,
@@ -13,6 +14,7 @@ export default async function reportDetail(
   switch (method) {
     case "PUT":
       // Update or create data in your database
+      updateReport(JSON.parse(body), id as string);
       res.status(200).json({});
       break;
     default:

@@ -1,15 +1,16 @@
-import { MongoClient, ObjectID } from "mongodb";
+import { MongoClient, ObjectID, ObjectId } from "mongodb";
+export interface IReportElement {
+  image: string;
+  description: string;
+  location?: string;
+  id: string;
+}
 
 export interface IReport {
   _id: string;
   name: string;
-  date: string;
-  reportElements: Array<{
-    image: string;
-    description: string;
-    location?: string;
-    id: string;
-  }>;
+  date: Date;
+  reportElements: IReportElement[];
 }
 
 const client = new MongoClient("mongodb://localhost:27017/test-dev", {
@@ -30,6 +31,23 @@ export async function saveReport(report: IReport) {
   return result.ops[0] as IReport;
 }
 
+export async function updateReport(report: IReport, id: string) {
+  await connect();
+  const result = await client
+    .db()
+    .collection("reports")
+    .updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          reportElements: report.reportElements,
+        },
+      }
+    );
+  console.log("jhey");
+  return report;
+}
+
 export async function getReports() {
   await connect();
   const result = (
@@ -48,9 +66,10 @@ export async function getReport(id: string) {
     .db()
     .collection("reports")
     .findOne({ _id: new ObjectID(id) })) as IReport;
+  console.log(result);
   return {
     ...result,
     _id: result._id.toString(),
-    date: result.date.toString(),
+    date: result.date.toDateString(),
   };
 }
