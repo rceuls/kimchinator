@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable, { Fields, Files } from "formidable";
 import * as fs from "fs";
+import uploadS3File from "../../../../services/s3uploader";
 
 export const config = {
   api: {
@@ -15,9 +16,9 @@ export default async function addImage(
   switch (req.method) {
     case "POST":
       const form = new formidable.IncomingForm();
-      const uploadPath = `./public/images/${req.query.id}`;
+      const uploadPath = `./tmp/${req.query.id}`;
       if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath);
+        fs.mkdirSync(uploadPath, { recursive: true });
       }
       form.uploadDir = uploadPath;
       form.keepExtensions = true;
@@ -29,7 +30,13 @@ export default async function addImage(
           resolve(files);
         });
       });
-      res.status(200).json({ path: parsed.image.path.replace("public", "") });
+      const s3Url = await uploadS3File(
+        parsed.image.name,
+        parsed.image.type,
+        fs.readFileSync(parsed.image.path)
+      );
+      fs.unlinkSync(parsed.image.path);
+      res.status(200).json({ path: s3Url });
       break;
     default:
       res.setHeader("Allow", ["PUT"]);

@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "aws-sdk": "^2.728.0",
     "compress.js": "^1.1.2",
     "formidable": "^1.2.2",
     "mongodb": "^3.6.0",
@@ -20,6 +21,7 @@
     "swr": "^0.3.0"
   },
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "@types/compress.js": "^1.1.0",
     "@types/formidable": "^1.0.31",
     "@types/mongodb": "^3.5.25",
