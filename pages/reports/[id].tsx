@@ -84,8 +84,7 @@ export default function ReportOverview(props: { report: IReport }) {
         ...newElements,
       ];
     }
-    const citems = [...newElements, ...items];
-    setItems(citems);
+    setItems([...newElements, ...items]);
   }
   const router = useRouter();
   return (
