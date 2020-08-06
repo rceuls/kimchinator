@@ -12,7 +12,7 @@ export interface IReport {
 
 export function getReportDetail(id: string) {
   return {
-    id: "abc",
+    id,
     reportElements: [
       {
         description: "the hills are alive",

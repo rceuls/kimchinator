@@ -1,14 +1,8 @@
-import {
-  Table,
-  Image,
-  Form,
-  TextArea,
-  Button,
-  ItemMeta,
-} from "semantic-ui-react";
+import { Table, Image, Form, TextArea, Button } from "semantic-ui-react";
 import LocationDropDown from "../../components/LocationDropDown";
 import { useState } from "react";
 import { IReport, getReportDetail } from "../api/reports/[id]";
+import { useRouter } from "next/router";
 
 function ReportRow(props: {
   image: string;
@@ -51,8 +45,10 @@ function ReportRow(props: {
   );
 }
 
-export default function ReportOverview({ report, host }) {
+export default function ReportOverview({ report }) {
   const [items, setItems] = useState<IReport>(report);
+  const router = useRouter();
+
   return (
     <>
       <Table basic="very" celled>
@@ -83,7 +79,7 @@ export default function ReportOverview({ report, host }) {
       <Button
         type="submit"
         onClick={() => {
-          var url = `${location.protocol}//${location.host}/api/reports/1`;
+          var url = `${location.protocol}//${location.host}/api/reports/${router.query.id}`;
           fetch(url, {
             method: "PUT",
             cache: "no-cache",
@@ -97,6 +93,6 @@ export default function ReportOverview({ report, host }) {
   );
 }
 
-export async function getServerSideProps(res) {
-  return { props: { report: getReportDetail("1") } };
+export async function getServerSideProps({ params }) {
+  return { props: { report: getReportDetail(params.id as string) } };
 }

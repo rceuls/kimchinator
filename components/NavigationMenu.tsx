@@ -5,12 +5,12 @@ export default function NavigationMenu() {
   return (
     <Menu>
       <Menu.Item>
-        <Link href="/report/new">
+        <Link href="/reports/new">
           <a>New Report</a>
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link href="/report/overview">
+        <Link href="/reports/overview">
           <a>Report overview</a>
         </Link>
       </Menu.Item>
