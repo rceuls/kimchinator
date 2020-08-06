@@ -14,7 +14,6 @@ import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import { IReport, getReport, IReportElement } from "../../services/database";
 import Compress from "compress.js";
-import { Logger } from "mongodb";
 
 function ReportRow(props: {
   image: string;
@@ -75,11 +74,19 @@ export default function ReportOverview(props: { report: IReport }) {
       });
       const img = resizedImage[0];
       const base64str = img.data;
+      const asFile = Compress.convertBase64ToFile(base64str, img.ext);
+      var url = `${location.protocol}//${location.host}/api/reports/${router.query.id}/image`;
+      const asFormData = new FormData();
+      asFormData.append("image", asFile, file.name);
+      const uploadResult = await fetch(url, {
+        method: "POST",
+        cache: "no-cache",
+        body: asFormData,
+      });
       newElements = [
         {
           id: (items.length + 1).toString(),
-          // image: `data:image/png;base64,${base64str}`,
-          image: "",
+          image: (await uploadResult.json()).path,
         },
         ...newElements,
       ];
