@@ -26,7 +26,6 @@ function ReportRow(props: {
   const [description, setDescription] = useState<string>(props.description);
   const [location, setLocation] = useState<string | undefined>(props.location);
 
-  console.log(props);
   return (
     <Table.Row>
       <Table.Cell width="four">
@@ -86,7 +85,6 @@ export default function ReportOverview(props: { report: IReport }) {
       ];
     }
     const citems = [...newElements, ...items];
-    console.log(citems);
     setItems(citems);
   }
   const router = useRouter();
