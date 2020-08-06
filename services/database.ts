@@ -1,7 +1,7 @@
 import { MongoClient, ObjectID, ObjectId } from "mongodb";
 export interface IReportElement {
   image: string;
-  description: string;
+  description?: string;
   location?: string;
   id: string;
 }
@@ -44,7 +44,6 @@ export async function updateReport(report: IReport, id: string) {
         },
       }
     );
-  console.log("jhey");
   return report;
 }
 
@@ -66,10 +65,8 @@ export async function getReport(id: string) {
     .db()
     .collection("reports")
     .findOne({ _id: new ObjectID(id) })) as IReport;
-  console.log(result);
   return {
     ...result,
     _id: result._id.toString(),
-    date: result.date.toDateString(),
   };
 }

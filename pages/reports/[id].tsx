@@ -14,17 +14,19 @@ import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import { IReport, getReport, IReportElement } from "../../services/database";
 import Compress from "compress.js";
+import { Logger } from "mongodb";
 
 function ReportRow(props: {
   image: string;
   location?: string;
-  description: string;
+  description?: string;
   descriptionChanged: (newValue: string) => void;
   locationChanged: (newValue: string) => void;
 }) {
   const [description, setDescription] = useState<string>(props.description);
   const [location, setLocation] = useState<string | undefined>(props.location);
 
+  console.log(props);
   return (
     <Table.Row>
       <Table.Cell width="four">
@@ -62,27 +64,30 @@ export default function ReportOverview(props: { report: IReport }) {
   );
   async function uploadFile(event: ChangeEvent<HTMLInputElement>) {
     var files = event.target.files;
-    console.log(files);
     const compress = new Compress();
-    const resizedImage = await compress.compress([files[0]], {
-      size: 0.5, // the max size in MB, defaults to 2MB
-      quality: 1, // the quality of the image, max is 1
-      maxWidth: 600,
-      maxHeight: 600,
-      resize: true,
-    });
-    const img = resizedImage[0];
-    const base64str = img.data;
-    console.log(base64str.length);
-    const newItems: IReportElement[] = [
-      {
-        description: "",
-        id: (items.length + 1).toString(),
-        image: `data:image/png;base64,${base64str}`,
-      },
-      ...items,
-    ];
-    setItems(newItems);
+    let newElements: IReportElement[] = [];
+    for (const file of files) {
+      const resizedImage = await compress.compress([file], {
+        size: 0.5, // the max size in MB, defaults to 2MB
+        quality: 1, // the quality of the image, max is 1
+        maxWidth: 600,
+        maxHeight: 600,
+        resize: true,
+      });
+      const img = resizedImage[0];
+      const base64str = img.data;
+      newElements = [
+        {
+          id: (items.length + 1).toString(),
+          // image: `data:image/png;base64,${base64str}`,
+          image: "",
+        },
+        ...newElements,
+      ];
+    }
+    const citems = [...newElements, ...items];
+    console.log(citems);
+    setItems(citems);
   }
   const router = useRouter();
   return (
@@ -98,7 +103,7 @@ export default function ReportOverview(props: { report: IReport }) {
               />
               <Label size="large">
                 <Icon name="calendar alternate outline" size="large" />
-                {props.report.date}
+                {new Date(props.report.date).toDateString()}
               </Label>
               <Label size="large">
                 <Icon name="envelope open outline" size="large" />
@@ -121,15 +126,17 @@ export default function ReportOverview(props: { report: IReport }) {
             <Table.Body>
               {items?.map((x, i) => (
                 <ReportRow
-                  key={i}
+                  key={`report_row${x.id}`}
                   {...x}
                   descriptionChanged={(e) => {
-                    items[i].description = e;
-                    setItems(items);
+                    const newArray = [...items];
+                    newArray[i] = { ...items[i], description: e };
+                    setItems(newArray);
                   }}
                   locationChanged={(e) => {
-                    items[i].location = e;
-                    setItems(items);
+                    const newArray = [...items];
+                    newArray[i] = { ...items[i], location: e };
+                    setItems(newArray);
                   }}
                 />
               ))}
