@@ -1,8 +1,8 @@
 import { Table, Image, Form, TextArea, Button } from "semantic-ui-react";
 import LocationDropDown from "../../components/LocationDropDown";
 import { useState } from "react";
-import { IReport, getReportDetail } from "../api/reports/[id]";
 import { useRouter } from "next/router";
+import { IReport, getReport } from "../../services/database";
 
 function ReportRow(props: {
   image: string;
@@ -62,7 +62,7 @@ export default function ReportOverview({ report }) {
         <Table.Body>
           {items.reportElements.map((x, i) => (
             <ReportRow
-              key={x.id}
+              key={i}
               {...x}
               descriptionChanged={(e) => {
                 items.reportElements[i].description = e;
@@ -94,5 +94,5 @@ export default function ReportOverview({ report }) {
 }
 
 export async function getServerSideProps({ params }) {
-  return { props: { report: getReportDetail(params.id as string) } };
+  return { props: { report: await getReport(params.id as string) } };
 }

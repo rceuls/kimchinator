@@ -10,7 +10,7 @@ export default function NavigationMenu() {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link href="/reports/overview">
+        <Link href="/reports">
           <a>Report overview</a>
         </Link>
       </Menu.Item>

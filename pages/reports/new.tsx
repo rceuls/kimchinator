@@ -1,10 +1,10 @@
 import { Form, Button } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
 export default function ReportOverview() {
   const [name, setName] = useState<string>();
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(new Date());
   const router = useRouter();
 
   async function handleSubmit() {
@@ -20,8 +20,8 @@ export default function ReportOverview() {
     if (response.ok) {
       var jsonBody = await response.json();
 
-      if (jsonBody.id) {
-        router.push(`/reports/${jsonBody.id}`);
+      if (jsonBody._id) {
+        router.push(`/reports/${jsonBody._id}`);
       }
     }
   }
