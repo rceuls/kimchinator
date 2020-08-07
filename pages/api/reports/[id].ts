@@ -13,7 +13,6 @@ export default async function reportDetail(
 
   switch (req.method) {
     case "PUT":
-      // Update or create data in your database
       updateReport(JSON.parse(req.body), req.query.id as string);
       res.status(200).json({});
       break;

@@ -12,8 +12,10 @@ import {
 import LocationDropDown from "../../components/LocationDropDown";
 import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
-import { IReport, getReport, IReportElement } from "../../services/database";
+import { getReport } from "../../services/database";
 import Compress from "compress.js";
+import { IReportElement, IReport } from "../../services/model";
+import { useSession } from "next-auth/client";
 
 function ReportRow(props: {
   image: string;
@@ -60,6 +62,9 @@ export default function ReportOverview(props: { report: IReport }) {
   const [items, setItems] = useState<IReportElement[]>(
     props.report.reportElements
   );
+  const router = useRouter();
+  const [session] = useSession();
+
   async function uploadFile(event: ChangeEvent<HTMLInputElement>) {
     var files = event.target.files;
     const compress = new Compress();
@@ -97,13 +102,14 @@ export default function ReportOverview(props: { report: IReport }) {
         {
           id: (items.length + 1).toString(),
           image: s3Response.filePath,
+          addedOn: new Date().toISOString(),
+          addedBy: session.user.email,
         },
         ...newElements,
       ];
     }
     setItems([...newElements, ...items]);
   }
-  const router = useRouter();
   return (
     <Grid>
       <Grid.Row>

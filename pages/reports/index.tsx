@@ -1,7 +1,8 @@
-import { getReports, IReport } from "../../services/database";
+import { getReports } from "../../services/database";
 import { useState } from "react";
 import { Table } from "semantic-ui-react";
 import Link from "next/link";
+import { IReport } from "../../services/model";
 
 export default function ReportIndex({ allReports }) {
   const [reports] = useState<IReport[]>(allReports);

@@ -1,17 +1,5 @@
 import { MongoClient, ObjectID, ObjectId } from "mongodb";
-export interface IReportElement {
-  image: string;
-  description?: string;
-  location?: string;
-  id: string;
-}
-
-export interface IReport {
-  _id: string;
-  name: string;
-  date: Date;
-  reportElements: IReportElement[];
-}
+import { IReport } from "./model";
 
 const client = new MongoClient(process.env.MONGO_CONNECTIONSTRING, {
   useNewUrlParser: true,
@@ -36,7 +24,7 @@ export async function saveReport(report: IReport) {
 
 export async function updateReport(report: IReport, id: string) {
   await connect();
-  const result = await client
+  await client
     .db()
     .collection("reports")
     .updateOne(
