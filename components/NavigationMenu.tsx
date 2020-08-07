@@ -3,21 +3,21 @@ import Link from "next/link";
 import { signout, useSession } from "next-auth/client";
 
 export default function NavigationMenu() {
-  const [session, loading] = useSession();
+  const [session] = useSession();
   return (
     <>
-      {session && (
-        <Menu>
-          <Menu.Item>
-            <Link href="/reports/new">
-              <a>New Report</a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link href="/reports">
-              <a>Report overview</a>
-            </Link>
-          </Menu.Item>
+      <Menu>
+        <Menu.Item>
+          <Link href="/reports/new">
+            <a>New Report</a>
+          </Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link href="/reports">
+            <a>Report overview</a>
+          </Link>
+        </Menu.Item>
+        {session && (
           <Menu.Item position="right">
             <a href="/api/auth/signout">
               <Button as="div" labelPosition="left">
@@ -36,8 +36,8 @@ export default function NavigationMenu() {
               </Button>
             </a>
           </Menu.Item>
-        </Menu>
-      )}
+        )}
+      </Menu>
     </>
   );
 }

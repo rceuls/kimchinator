@@ -1,5 +1,4 @@
 import { Dropdown } from "semantic-ui-react";
-import { loadGetInitialProps } from "next/dist/next-server/lib/utils";
 import { useState } from "react";
 const locationOptions = [
   {
