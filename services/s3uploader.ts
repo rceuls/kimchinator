@@ -1,23 +1,19 @@
 import { S3 } from "aws-sdk";
-import { PutObjectRequest } from "aws-sdk/clients/s3";
 
 const s3 = new S3({
   accessKeyId: process.env.UPLOAD_AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.UPLOAD_AWS_SECRET_ACCESS_KEY,
   region: "eu-west-3",
 });
-export default async function uploadS3File(
-  filename: string,
-  fileType: string,
-  file: Buffer
-) {
-  const s3Params: PutObjectRequest = {
+
+export default async function uploadS3File(filename: string, type: string) {
+  const params = {
     Bucket: process.env.UPLOAD_AWS_BUCKET_NAME,
     Key: filename,
-    ContentType: fileType,
-    Body: file,
+    Expires: 60,
+    ContentType: type,
   };
-
-  const data = await s3.upload(s3Params).promise();
-  return data.Location;
+  const uploadPath = await s3.getSignedUrlPromise("putObject", params);
+  const displayPath = `https://${process.env.UPLOAD_AWS_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/${filename}`;
+  return [uploadPath, displayPath];
 }

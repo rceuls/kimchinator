@@ -65,6 +65,7 @@ export default function ReportOverview(props: { report: IReport }) {
     const compress = new Compress();
     let newElements: IReportElement[] = [];
     for (const file of files) {
+      const fileName = `${router.query.id}/${file.name}`;
       const resizedImage = await compress.compress([file], {
         size: 0.5, // the max size in MB, defaults to 2MB
         quality: 1, // the quality of the image, max is 1
@@ -77,16 +78,25 @@ export default function ReportOverview(props: { report: IReport }) {
       const asFile = Compress.convertBase64ToFile(base64str, img.ext);
       var url = `${location.protocol}//${location.host}/api/reports/${router.query.id}/image`;
       const asFormData = new FormData();
-      asFormData.append("image", asFile, file.name);
-      const uploadResult = await fetch(url, {
+      asFormData.append("image", asFile, fileName);
+      const reservedUrlResponse = await fetch(url, {
         method: "POST",
         cache: "no-cache",
-        body: asFormData,
+        body: JSON.stringify({
+          contentType: file.type,
+          fileName: fileName,
+        }),
+      });
+      const s3Response = await reservedUrlResponse.json();
+      const uploadResult = await fetch(s3Response.uploadPath, {
+        method: "PUT",
+        cache: "no-cache",
+        body: asFile,
       });
       newElements = [
         {
-          id: (newElements.length + 1).toString(),
-          image: (await uploadResult.json()).path,
+          id: (items.length + 1).toString(),
+          image: s3Response.filePath,
         },
         ...newElements,
       ];
