@@ -88,7 +88,7 @@ export default function ReportOverview(props: { report: IReport }) {
         }),
       });
       const s3Response = await reservedUrlResponse.json();
-      const uploadResult = await fetch(s3Response.uploadPath, {
+      await fetch(s3Response.uploadPath, {
         method: "PUT",
         cache: "no-cache",
         body: asFile,
