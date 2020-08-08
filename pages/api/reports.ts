@@ -11,15 +11,13 @@ export default async function report(
   if (!session) {
     res.status(401).end();
   }
-  console.log(session);
-
   switch (req.method) {
     case "POST":
       const bodyObj: IReport = {
         ...(JSON.parse(req.body) as IReport),
         reportElements: [],
         addedBy: session.user.email,
-        addedOn: new Date().toISOString(),
+        addedOn: new Date(),
       };
       const result = await saveReport(bodyObj);
       res.status(200).json(result);

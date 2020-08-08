@@ -42,8 +42,11 @@ export default async function uploadImageForReport({
       {
         id: (otherItemCount + newElements.length + 1).toString(),
         image: s3Response.filePath,
-        addedOn: new Date().toISOString(),
+        addedOn: new Date(),
         addedBy,
+        byDate: new Date(),
+        responsible: "",
+        description: "",
       },
       ...newElements,
     ];

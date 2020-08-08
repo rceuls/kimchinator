@@ -20,16 +20,28 @@ import { getReport } from "../../services/database";
 import { IReportElement, IReport } from "../../services/model";
 import { useSession } from "next-auth/client";
 import uploadImageForReport from "../../components/uploadFile";
+import SemanticDatepicker from "react-semantic-ui-datepickers";
 
 function ReportRow(props: {
   image: string;
   location?: string;
   description?: string;
+  responsible?: string;
+  byDate?: Date;
+
   descriptionChanged: (newValue: string) => void;
   locationChanged: (newValue: string) => void;
+  responsibleChanged: (newValue: string) => void;
+  byDateChanged: (newValue: Date) => void;
 }) {
   const [description, setDescription] = useState<string>(props.description);
   const [location, setLocation] = useState<string | undefined>(props.location);
+  const [responsible, setResponsible] = useState<string | undefined>(
+    props.responsible
+  );
+  const [byDate, setByDate] = useState<Date | undefined>(
+    new Date(props.byDate)
+  );
 
   return (
     <Table.Row>
@@ -44,6 +56,27 @@ function ReportRow(props: {
           }}
           initialValue={location}
         />
+        <SemanticDatepicker
+          value={byDate}
+          required={false}
+          datePickerOnly
+          showToday
+          onChange={(_e, data) => {
+            if (!Array.isArray(data.value)) {
+              setByDate(data.value);
+              props.byDateChanged(data.value);
+            }
+          }}
+        />
+        <Form.Input
+          type="text"
+          placeholder="Responsible"
+          onChange={(e) => {
+            setResponsible(e.target.value);
+            props.responsibleChanged(e.target.value);
+          }}
+          value={responsible}
+        />
       </Table.Cell>
       <Table.Cell width="ten">
         <Form>
@@ -55,6 +88,7 @@ function ReportRow(props: {
               props.descriptionChanged(p.value.toString());
             }}
             value={description}
+            placeholder="Description"
           />
         </Form>
       </Table.Cell>
@@ -144,7 +178,7 @@ export default function ReportOverview(props: { report: IReport }) {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Picture</Table.HeaderCell>
-                    <Table.HeaderCell>Location</Table.HeaderCell>
+                    <Table.HeaderCell>Info</Table.HeaderCell>
                     <Table.HeaderCell>Comment</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
@@ -161,6 +195,16 @@ export default function ReportOverview(props: { report: IReport }) {
                       locationChanged={(e) => {
                         const newArray = [...items];
                         newArray[i] = { ...items[i], location: e };
+                        setItems(newArray);
+                      }}
+                      byDateChanged={(e) => {
+                        const newArray = [...items];
+                        newArray[i] = { ...items[i], byDate: e };
+                        setItems(newArray);
+                      }}
+                      responsibleChanged={(e) => {
+                        const newArray = [...items];
+                        newArray[i] = { ...items[i], responsible: e };
                         setItems(newArray);
                       }}
                     />

@@ -8,6 +8,7 @@ import {
 } from "semantic-ui-react";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import SemanticDatepicker from "react-semantic-ui-datepickers";
 
 export default function ReportOverview() {
   const [name, setName] = useState<string>();
@@ -46,13 +47,16 @@ export default function ReportOverview() {
                 setName(e.target.value);
               }}
             />
-            <Form.Input
+            <SemanticDatepicker
               label="Date"
-              required
-              type="date"
-              onChange={(e) => {
-                e.preventDefault();
-                setDate(e.target.valueAsDate);
+              value={date}
+              required={false}
+              datePickerOnly
+              showToday
+              onChange={(_e, data) => {
+                if (!Array.isArray(data.value)) {
+                  setDate(data.value);
+                }
               }}
             />
           </Form.Group>

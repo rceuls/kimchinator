@@ -3,7 +3,9 @@ export interface IReportElement {
   description?: string;
   location?: string;
   id: string;
-  addedOn: string;
+  byDate?: Date;
+  responsible?: string;
+  addedOn: Date;
   addedBy: string;
 }
 
@@ -12,6 +14,6 @@ export interface IReport {
   name: string;
   date: Date;
   reportElements: IReportElement[];
-  addedOn: string;
+  addedOn: Date;
   addedBy: string;
 }
