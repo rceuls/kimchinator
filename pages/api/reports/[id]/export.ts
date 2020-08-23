@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import uploadS3File from "../../../../services/s3uploader";
 import { getSession } from "next-auth/client";
 
-export default async function addImage(
+export default async function exportToPdf(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
