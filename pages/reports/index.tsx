@@ -1,6 +1,6 @@
 import { getReports } from "../../services/database";
 import { useState } from "react";
-import { Table } from "semantic-ui-react";
+import { Table, Icon, Button, ButtonGroup } from "semantic-ui-react";
 import Link from "next/link";
 import { IReport } from "../../services/model";
 
@@ -23,9 +23,24 @@ export default function ReportIndex({ allReports }) {
             <Table.Cell>{new Date(x.date).toDateString()}</Table.Cell>
             <Table.Cell>{x.reportElements.length}</Table.Cell>
             <Table.Cell>
-              <Link href={`/reports/${x._id}`}>
-                <a>Edit</a>
-              </Link>
+              <ButtonGroup>
+                <Link href={`/reports/${x._id}`}>
+                  <Button animated="vertical">
+                    <Button.Content hidden>Edit</Button.Content>
+                    <Button.Content visible>
+                      <Icon name="edit" />
+                    </Button.Content>
+                  </Button>
+                </Link>
+                <Link href={`/reports/${x._id}/pdf`}>
+                  <Button animated="vertical">
+                    <Button.Content hidden>PDF</Button.Content>
+                    <Button.Content visible>
+                      <Icon name="file pdf" />
+                    </Button.Content>
+                  </Button>
+                </Link>
+              </ButtonGroup>
             </Table.Cell>
           </Table.Row>
         ))}
